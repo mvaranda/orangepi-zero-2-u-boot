@@ -1,0 +1,83 @@
+
+ref: https://www.slashinit.com/posts/building-uboot-orange-pi-zero-2/
+
+To build for Orange PI Zero2:
+============================
+
+./compile.sh BOARD=orangepizero2 BRANCH=current RELEASE=jammy
+
+
+To inspect image:
+================
+
+sudo fdisk -l  Armbian-unofficial_24.8.0-trunk_Orangepizero2_jammy_current_6.6.31_xfce_desktop.img
+
+result: 
+  Units: sectors of 1 * 512 = 512 bytes
+  Sector size (logical/physical): 512 bytes / 512 bytes
+  I/O size (minimum/optimal): 512 bytes / 512 bytes
+  Disklabel type: dos
+  Disk identifier: 0xb1b5bb35
+
+  Device                                                                               Boot Start      End  Sectors  Size Id Type
+  Armbian-unofficial_24.8.0-trunk_Orangepizero2_jammy_current_6.6.31_xfce_desktop.img1       8192 12173311 12165120  5.8G 83 Linux
+
+sudo mkdir /mnt/disk
+
+sudo mount -o loop,offset=4194304 Armbian-unofficial_24.8.0-trunk_Orangepizero2_jammy_current_6.6.31_xfce_desktop.img /mnt/disk/
+
+where offset = 8192 * 512
+
+Inspect the mounted disk:
+=========================
+
+ls -l /mnt/disk/boot/
+total 63884
+-rw-rw-r-- 1 mvaranda mvaranda      128 Jun 23 11:51 armbianEnv.txt
+-rw-rw-r-- 1 root     root       230454 Jun 23 11:48 boot.bmp
+-rw-rw-r-- 1 mvaranda mvaranda     3187 Jun 23 11:46 boot.cmd
+-rw-r--r-- 1 root     root         3259 Jun 23 11:51 boot.scr
+-rw-r--r-- 1 root     root       222335 Jun 22 14:17 config-6.6.31-current-sunxi64
+lrwxrwxrwx 1 root     root           26 Jun 23 11:45 dtb -> dtb-6.6.31-current-sunxi64
+drwxr-xr-x 3 root     root         4096 Jun 23 11:45 dtb-6.6.31-current-sunxi64
+lrwxrwxrwx 1 root     root           30 Jun 23 11:45 Image -> vmlinuz-6.6.31-current-sunxi64
+lrwxrwxrwx 1 root     root           33 Jun 23 11:45 initrd.img -> initrd.img-6.6.31-current-sunxi64
+-rw-r--r-- 1 root     root     18957537 Jun 23 11:54 initrd.img-6.6.31-current-sunxi64
+lrwxrwxrwx 1 root     root           33 Jun 23 11:45 initrd.img.old -> initrd.img-6.6.31-current-sunxi64
+-rw-r--r-- 1 root     root      3567688 Jun 22 14:17 System.map-6.6.31-current-sunxi64
+lrwxrwxrwx 1 root     root           30 Jun 23 11:54 uInitrd -> uInitrd-6.6.31-current-sunxi64
+-rw-r--r-- 1 root     root     18957601 Jun 23 11:54 uInitrd-6.6.31-current-sunxi64
+lrwxrwxrwx 1 root     root           30 Jun 23 11:45 vmlinuz -> vmlinuz-6.6.31-current-sunxi64
+-rw-r--r-- 1 root     root     23445512 Jun 22 14:17 vmlinuz-6.6.31-current-sunxi64
+lrwxrwxrwx 1 root     root           30 Jun 23 11:45 vmlinuz.old -> vmlinuz-6.6.31-current-sunxi64
+
+!!! Note to build in Linux Mint:
+================================
+
+index 2c72041..e00dab3 100644
+--- a/lib/functions/host/host-release.sh
++++ b/lib/functions/host/host-release.sh
+@@ -33,14 +33,14 @@ function obtain_and_check_host_release_and_arch() {
+        #
+        # NO_HOST_RELEASE_CHECK overrides the check for a supported host system
+        # Disable host OS check at your own risk. Any issues reported with unsupported releases will be closed without discussion
+-       if [[ -z $HOSTRELEASE || "bookworm trixie sid jammy kinetic lunar vanessa vera victoria mantic noble" != *"$HOSTRELEASE"* ]]; then
+-               if [[ $NO_HOST_RELEASE_CHECK == yes ]]; then
+-                       display_alert "You are running on an unsupported system" "${HOSTRELEASE:-(unknown)}" "wrn"
+-                       display_alert "Do not report any errors, warnings or other issues encountered beyond this point" "" "wrn"
+-               else
+-                       exit_with_error "Unsupported build system: '${HOSTRELEASE:-(unknown)}'"
+-               fi
+-       fi
++#      if [[ -z $HOSTRELEASE || "bookworm trixie sid jammy kinetic lunar vanessa vera victoria mantic noble" != *"$HOSTRELEASE"* ]]; then
++#              if [[ $NO_HOST_RELEASE_CHECK == yes ]]; then
++#                      display_alert "You are running on an unsupported system" "${HOSTRELEASE:-(unknown)}" "wrn"
++#                      display_alert "Do not report any errors, warnings or other issues encountered beyond this point" "" "wrn"
++#              else
++#                      exit_with_error "Unsupported build system: '${HOSTRELEASE:-(unknown)}'"
++#              fi
++#      fi
+ }
+ 
+ function obtain_hostrelease_only() {
+
