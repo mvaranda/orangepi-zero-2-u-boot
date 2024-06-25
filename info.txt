@@ -81,3 +81,29 @@ index 2c72041..e00dab3 100644
  
  function obtain_hostrelease_only() {
 
+ARM Secure
+==========
+
+export ARCH=arm64
+export CROSS_COMPILE=/usr/bin/aarch64-linux-gnu-
+pushd arm-trusted-firmware
+make PLAT=sun50i_h616 DEBUG=1
+popd
+
+output: Built /home/mvaranda/orangepi-zero-2-u-boot/arm-trusted-firmware/build/sun50i_h616/debug/bl31.bin successfully
+
+u-boot
+======
+
+pushd u-boot
+make orangepi_zero2_defconfig -j8
+make BL31=../arm-trusted-firmware/build/sun50i_h616/debug/bl31.bin
+ls -l u-boot*
+popd
+
+Create SDCard
+=============
+
+ref: https://linux-sunxi.org/Bootable_SD_card#Bootloader
+
+
