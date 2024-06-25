@@ -1,0 +1,9 @@
+[submodule "armbian-build"]
+	path = armbian-build
+	url = https://github.com/mvaranda/armbian-build
+[submodule "arm-trusted-firmware"]
+	path = arm-trusted-firmware
+	url = https://github.com/mvaranda/arm-trusted-firmware
+[submodule "u-boot"]
+	path = u-boot
+	url = https://github.com/mvaranda/u-boot
